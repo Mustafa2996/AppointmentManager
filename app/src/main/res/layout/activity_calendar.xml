@@ -27,6 +27,7 @@
 
     <Button
         android:id="@+id/btnCreateAppointment"
+        android:onClick="createAppointment"
         android:layout_below="@+id/imageGen"
         android:text="Create Appointment"
         android:textSize="20sp"
