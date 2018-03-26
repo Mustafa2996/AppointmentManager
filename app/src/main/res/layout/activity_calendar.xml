@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <EditText
         android:id="@+id/txtDateEntered"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="69dp"
+        android:layout_marginTop="16dp"
         android:clickable="false"
         android:cursorVisible="false"
         android:focusable="false"
@@ -19,9 +20,59 @@
     
     <ImageView
         android:id="@+id/imageGen"
+        android:layout_below="@+id/txtDateEntered"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnCreateAppointment"
+        android:layout_below="@+id/imageGen"
+        android:text="Create Appointment"
+        android:textSize="20sp"
+        android:background="#3c6eaf"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnViewEditAppointments"
+        android:layout_below="@+id/btnCreateAppointment"
+        android:text="View/Edit Appointments"
+        android:textSize="20sp"
+        android:background="#3c6eaf"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnDeleteAppointment"
+        android:layout_below="@+id/btnViewEditAppointments"
+        android:text="Delete Appointment"
+        android:textSize="20sp"
+        android:background="#3c6eaf"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnMoveAppointment"
+        android:layout_below="@+id/btnDeleteAppointment"
+        android:text="Move Appointment"
+        android:textSize="20sp"
+        android:background="#3c6eaf"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/btnSearch"
+        android:layout_below="@+id/btnMoveAppointment"
+        android:text="Search"
+        android:textSize="20sp"
+        android:background="#3c6eaf"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
 </RelativeLayout>

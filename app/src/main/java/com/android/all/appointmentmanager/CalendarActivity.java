@@ -19,8 +19,7 @@ import java.util.Calendar;
  * Created by yuriyallakhverdov on 26.03.2018.
  */
 
-public class CalendarActivity extends AppCompatActivity
-         {
+public class CalendarActivity extends AppCompatActivity {
 
     EditText mDateEditText;
     Calendar mCurrentDate;
@@ -49,6 +48,8 @@ public class CalendarActivity extends AppCompatActivity
 
         mImageGenerator.setStorageToSDCard(true);
 
+        showDatePicker();
+
         mDateEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +75,34 @@ public class CalendarActivity extends AppCompatActivity
                 mDatePicker.show();
             }
         });
+    }
+
+    private void showDatePicker() {
+        mCurrentDate = Calendar.getInstance();
+        int year = mCurrentDate.get(Calendar.YEAR);
+        int month = mCurrentDate.get(Calendar.MONTH);
+        int day = mCurrentDate.get(Calendar.DAY_OF_MONTH);
+        Log.d("Calendar", year + " " + month + " " + day);
+
+        DatePickerDialog mDatePicker =
+                new DatePickerDialog(CalendarActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
+                                mDateEditText.setText(selectedDay + "-" + (selectedMonth +1) + "-" + selectedYear);
+
+                                mCurrentDate.set(selectedYear, selectedMonth, selectedDay);
+                                mGeneratedDateIcon = mImageGenerator
+                                        .generateDateImage(mCurrentDate, R.drawable.empty_calendar);
+                                mDisplayGeneratedImage.setImageBitmap(mGeneratedDateIcon);
+                            }
+                        }, year, month, day);
+        mDatePicker.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        moveTaskToBack(true);
     }
 
 
