@@ -23,6 +23,7 @@ import java.util.Calendar;
 
 public class CalendarActivity extends AppCompatActivity {
 
+    String mDateString;
     EditText mDateEditText;
     Calendar mCurrentDate;
     Bitmap mGeneratedDateIcon;
@@ -42,6 +43,7 @@ public class CalendarActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(CalendarActivity.this,
                         CreateAppointmentActivity.class);
+                intent.putExtra("Date", mDateString);
                 startActivity(intent);
             }
         });
@@ -103,7 +105,8 @@ public class CalendarActivity extends AppCompatActivity {
                         new DatePickerDialog.OnDateSetListener() {
                             @Override
                             public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-                                mDateEditText.setText(selectedDay + "-" + (selectedMonth +1) + "-" + selectedYear);
+                                mDateString = (selectedDay + "-" + (selectedMonth +1) + "-" + selectedYear);
+                                mDateEditText.setText(mDateString);
 
                                 mCurrentDate.set(selectedYear, selectedMonth, selectedDay);
                                 mGeneratedDateIcon = mImageGenerator
