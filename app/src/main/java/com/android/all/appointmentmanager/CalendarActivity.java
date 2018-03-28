@@ -56,25 +56,10 @@ public class CalendarActivity extends AppCompatActivity {
     Button createAppointment;
     Button deleteAppointment;
 
-    //Adapter
-    List<Appointment> appointmentList = new ArrayList<>();
-    ArrayAdapter adapter;
-
-    //Database
-    private CompositeDisposable compositeDisposable;
-    private AppointmentRepository appointmentRepository;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
-
-        //Database
-        AppointmentDatabase appointmentDatabase = AppointmentDatabase.getInstance(this);
-        appointmentRepository = AppointmentRepository.getInstance(AppointmentDataSource.getInstance(
-                appointmentDatabase.appointmentDAO()));
-
-        compositeDisposable = new CompositeDisposable();
 
         createAppointment = (Button) findViewById(R.id.btnCreateAppointment);
         createAppointment.setOnClickListener(new View.OnClickListener() {
@@ -96,7 +81,14 @@ public class CalendarActivity extends AppCompatActivity {
         deleteAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                createPromptDialog();
+                if (mDateString == null || mDateString.equals("")) {
+                    showDatePicker();
+                } else {
+                    Intent intent = new Intent(CalendarActivity.this,
+                            DeleteAppointmentActivity.class);
+                    intent.putExtra("Date", mDateString);
+                    startActivity(intent);
+                }
             }
         });
 
@@ -169,85 +161,6 @@ public class CalendarActivity extends AppCompatActivity {
                         }, year, month, day);
         mDatePicker.setCancelable(false);
         mDatePicker.show();
-    }
-
-    private void createPromptDialog() {
-        new AlertDialog.Builder(CalendarActivity.this)
-                .setMessage("Choose the action")
-                .setPositiveButton("Select appointment to delete",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Intent intent = new Intent(CalendarActivity.this,
-                                        CalendarActivity.class);
-                                startActivity(intent);
-
-                            }
-                        })
-                .setNegativeButton("Delete all appointments for that date",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                deleteDateAppointments(mDateString);
-                            }
-                        })
-                .create().show();
-    }
-
-    private void deleteDateAppointments(final String date) {
-
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... voids) {
-                List<Appointment> appointmentList =
-                        appointmentRepository.getAppointmentsByDate(date);
-                for (Appointment appointment : appointmentList) {
-                    deleteAppointment(appointment);
-                }
-                return null;
-            }
-        }.execute();
-    }
-
-    private void deleteAppointment(final Appointment appointment) {
-        Disposable disposable = Observable.create(
-                new ObservableOnSubscribe<Object>() {
-
-                    @Override
-                    public void subscribe(ObservableEmitter<Object> e) throws Exception {
-                        appointmentRepository.deleteAppointment(appointment);
-                        e.onComplete();
-                    }
-                }
-        )
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer() {
-                               @Override
-                               public void accept(Object o) throws Exception {
-
-                               }
-                           }, new Consumer<Throwable>() {
-                               @Override
-                               public void accept(Throwable throwable) throws Exception {
-                                   Toast.makeText(CalendarActivity.this,
-                                           "" + throwable.getMessage(), Toast.LENGTH_SHORT)
-                                           .show();
-                               }
-                           }, new Action() {
-                               @Override
-                               public void run() throws Exception {
-                                   Intent intent = new Intent(CalendarActivity.this,
-                                           ListActivity.class);
-                                   startActivity(intent);
-
-                                  // loadData();//Refresh data
-                               }
-                           }
-
-                );
-
-        compositeDisposable.add(disposable);
     }
 
     @Override
