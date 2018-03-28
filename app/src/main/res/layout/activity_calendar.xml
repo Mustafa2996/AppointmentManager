@@ -37,7 +37,7 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btnViewEditAppointments"
+        android:id="@+id/btnViewEditAppointment"
         android:layout_below="@+id/btnCreateAppointment"
         android:text="View/Edit Appointments"
         android:textSize="20sp"
@@ -48,7 +48,7 @@
 
     <Button
         android:id="@+id/btnDeleteAppointment"
-        android:layout_below="@+id/btnViewEditAppointments"
+        android:layout_below="@+id/btnViewEditAppointment"
         android:text="Delete Appointment"
         android:textSize="20sp"
         android:background="#3c6eaf"

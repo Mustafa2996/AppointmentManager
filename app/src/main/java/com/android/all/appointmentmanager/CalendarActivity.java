@@ -55,6 +55,7 @@ public class CalendarActivity extends AppCompatActivity {
 
     Button createAppointment;
     Button deleteAppointment;
+    Button viewEditAppointment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,21 @@ public class CalendarActivity extends AppCompatActivity {
                 } else {
                     Intent intent = new Intent(CalendarActivity.this,
                             DeleteAppointmentActivity.class);
+                    intent.putExtra("Date", mDateString);
+                    startActivity(intent);
+                }
+            }
+        });
+
+        viewEditAppointment = (Button) findViewById(R.id.btnViewEditAppointment);
+        viewEditAppointment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mDateString == null || mDateString.equals("")) {
+                    showDatePicker();
+                } else {
+                    Intent intent = new Intent(CalendarActivity.this,
+                            ViewEditAppointmentActivity.class);
                     intent.putExtra("Date", mDateString);
                     startActivity(intent);
                 }
