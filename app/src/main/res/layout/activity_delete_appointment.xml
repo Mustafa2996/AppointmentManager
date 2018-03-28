@@ -4,16 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/dateAppointmentsList"
-        android:layout_margin="16dp"
-        android:padding="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
     <EditText
         android:id="@+id/txtAppointmentNumber"
-        android:layout_below="@+id/dateAppointmentsList"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
@@ -22,13 +14,22 @@
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:gravity="center_horizontal"
-        android:hint="Enter ordered number of appointment you want to delete"
+        android:hint="Enter appointment ID you want to delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/dateAppointmentsList"
+        android:layout_below="@+id/txtAppointmentNumber"
+        android:layout_centerHorizontal="true"
+        android:layout_margin="16dp"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/btnDelete"
-        android:layout_below="@+id/txtAppointmentNumber"
+        android:layout_alignParentBottom="true"
         android:text="Delete"
         android:textSize="20sp"
         android:background="#3c6eaf"

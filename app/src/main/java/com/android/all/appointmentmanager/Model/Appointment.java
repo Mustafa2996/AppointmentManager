@@ -4,6 +4,11 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+
 import io.reactivex.annotations.NonNull;
 
 /**
@@ -82,8 +87,6 @@ public class Appointment {
 
     @Override
     public String toString() {
-        return new StringBuilder(date).append("\n").append(time)
-                .append("\n").append(title).append("\n")
-                .append(details).toString();
+        return new StringBuilder("" + id).append(". ").append(time).append(" ").append(title).toString();
     }
 }

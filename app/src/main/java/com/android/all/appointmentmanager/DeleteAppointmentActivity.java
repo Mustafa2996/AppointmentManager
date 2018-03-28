@@ -2,6 +2,7 @@ package com.android.all.appointmentmanager;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.arch.persistence.room.Database;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,10 +24,12 @@ import com.android.all.appointmentmanager.Database.AppointmentRepository;
 import com.android.all.appointmentmanager.Local.AppointmentDataSource;
 import com.android.all.appointmentmanager.Local.AppointmentDatabase;
 import com.android.all.appointmentmanager.Model.Appointment;
+import com.android.all.appointmentmanager.Model.AppointmentTimeComparator;
 import com.kd.dynamic.calendar.generator.ImageGenerator;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -64,6 +67,9 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_delete_appointment);
 
+        mDateAppointmentsList = (TextView)findViewById(R.id.dateAppointmentsList);
+        mAppointmentNumberEditText = (EditText) findViewById(R.id.txtAppointmentNumber);
+        delete = (Button) findViewById(R.id.btnDelete);
         mDateString = getIntent().getStringExtra("Date");
 
         //Database
@@ -72,8 +78,6 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
                 appointmentDatabase.appointmentDAO()));
 
         compositeDisposable = new CompositeDisposable();
-
-        delete = (Button) findViewById(R.id.btnDelete);
 
         createPromptDialog();
 
@@ -97,7 +101,7 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                deleteOneAppointment(mDateString);
+                                getDateAppointments(mDateString);
                             }
                         })
                 .setNegativeButton("Delete all appointments for that date",
@@ -110,18 +114,27 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
                 .create().show();
     }
 
-    private void deleteOneAppointment(final String date) {
-        new AsyncTask<Void, Void, Void>() {
+    private void getDateAppointments(final String date) {
+        new AsyncTask<Void, Void, List<Appointment>>() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            protected List<Appointment> doInBackground(Void... params) {
                 List<Appointment> appointmentList =
                         appointmentRepository.getAppointmentsByDate(date);
-                for (Appointment appointment : appointmentList) {
-                    deleteAppointment(appointment);
-
-                }
-                return null;
+                return appointmentList;
             }
+
+            @Override
+            protected void onPostExecute(List<Appointment> appointmentList) {
+                StringBuilder appointmentsListBuilder = new StringBuilder();
+                for (Appointment appointment : appointmentList) {
+                    String appointmentDescription = "" +
+                            appointment.getId() + ". " + appointment.getTime() +
+                            " " + appointment.getTitle();
+                    appointmentsListBuilder.append(appointmentDescription + "\n");
+                }
+                mDateAppointmentsList.setText(appointmentsListBuilder.toString());
+            }
+
         }.execute();
     }
 

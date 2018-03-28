@@ -36,7 +36,7 @@
 
     <Button
         android:id="@+id/btnSaveAppointment"
-        android:layout_below="@+id/appointmentDetails"
+        android:layout_alignParentBottom="true"
         android:text="Save Appointment"
         android:textSize="20sp"
         android:background="#3c6eaf"
