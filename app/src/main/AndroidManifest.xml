@@ -21,6 +21,8 @@
 
         <activity android:name=".CreateAppointmentActivity" />
 
+        <activity android:name=".DeleteAppointmentActivity" />
+
         <activity android:name=".ListActivity" />
     </application>
 
