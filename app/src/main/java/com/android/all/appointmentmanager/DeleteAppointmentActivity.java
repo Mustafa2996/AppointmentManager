@@ -93,11 +93,18 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
                 new AlertDialog.Builder(DeleteAppointmentActivity.this)
                         .setMessage("Would you like to delete event: " +
                                 mDeleteId + "?")
-                        .setPositiveButton(android.R.string.ok,
+                        .setPositiveButton("Yes",
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
                                         deleteAppointmentFromDateList(mDateAppointments, mDeleteId);
+                                    }
+                                })
+                        .setNegativeButton("No",
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
                                     }
                                 }).create().show();
             }
