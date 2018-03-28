@@ -89,6 +89,7 @@ public class ViewEditAppointmentActivity extends AppCompatActivity {
                                         Intent intent = new Intent(ViewEditAppointmentActivity.this,
                                                 EditAppointmentActivity.class);
                                         intent.putExtra("Id", mEditId);
+                                        intent.putExtra("Date", mDateString);
                                         startActivityForResult(intent,
                                                 PICK_APPOINTMENT_DATA_REQUEST);
                                     }

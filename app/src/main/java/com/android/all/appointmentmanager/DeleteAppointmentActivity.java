@@ -218,11 +218,11 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
                            }, new Action() {
                                @Override
                                public void run() throws Exception {
+
+                                   //loadData();//Refresh data
                                    Intent intent = new Intent(DeleteAppointmentActivity.this,
                                            ListActivity.class);
                                    startActivity(intent);
-
-                                   // loadData();//Refresh data
                                }
                            }
 
@@ -230,6 +230,8 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
 
         compositeDisposable.add(disposable);
     }
+
+
 
     @Override
     public void onBackPressed() {

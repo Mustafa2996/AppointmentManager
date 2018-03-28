@@ -41,6 +41,7 @@ public class EditAppointmentActivity extends AppCompatActivity {
     Button updateAppointment;
     Intent initIntent;
     String stringId;
+    String mEditedAppointmentDate;
 
     //Database
     private CompositeDisposable compositeDisposable;
@@ -59,6 +60,7 @@ public class EditAppointmentActivity extends AppCompatActivity {
 
         initIntent = getIntent();
         stringId = initIntent.getStringExtra("Id");
+        mEditedAppointmentDate = initIntent.getStringExtra("Date");
 
         appointmentEditTitle = (EditText) findViewById(R.id.appointmentEditTitle);
         appointmentEditTime = (EditText) findViewById(R.id.appointmentEditTime);
@@ -71,11 +73,56 @@ public class EditAppointmentActivity extends AppCompatActivity {
         updateAppointment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "in onClick appointmentDate = " +
-                        initIntent.getStringExtra("Date") + ", appointmentTitle = " +
-                        appointmentEditTitle.getText().toString());
+                Appointment editedAppointment = new Appointment(
+                        mEditedAppointmentDate,
+                        appointmentEditTime.getText().toString(),
+                        appointmentEditTitle.getText().toString(),
+                        appointmentEditDetails.getText().toString()
+                );
+                editedAppointment.setId(Integer.valueOf(stringId));
+                Log.d(TAG, editedAppointment.toString());
+                updateAppointmentAfterEdit(editedAppointment);
             }
         });
+    }
+
+    private void updateAppointmentAfterEdit(final Appointment appointment) {
+        Disposable disposable = Observable.create(
+                new ObservableOnSubscribe<Object>() {
+
+                    @Override
+                    public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                        appointmentRepository.updateAppointment(appointment);
+                        e.onComplete();
+                    }
+                }
+        )
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer() {
+                               @Override
+                               public void accept(Object o) throws Exception {
+
+                               }
+                           }, new Consumer<Throwable>() {
+                               @Override
+                               public void accept(Throwable throwable) throws Exception {
+                                   Toast.makeText(EditAppointmentActivity.this,
+                                           "" + throwable.getMessage(), Toast.LENGTH_SHORT)
+                                           .show();
+                               }
+                           }, new Action() {
+                               @Override
+                               public void run() throws Exception {
+                                   Intent intent = new Intent(EditAppointmentActivity.this,
+                                           ListActivity.class);
+                                   startActivity(intent);
+                               }
+                           }
+
+                );
+
+        compositeDisposable.add(disposable);
     }
 
     private void loadDataForEdit(int id) {
@@ -107,5 +154,7 @@ public class EditAppointmentActivity extends AppCompatActivity {
         appointmentEditTime.setText(appointment.getTime());
         appointmentEditDetails.setText(appointment.getDetails());
     }
+
+
 
 }
