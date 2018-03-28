@@ -9,7 +9,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:hint="Enter appointment ID you want to delete"
+        android:hint="Enter appointment ID you want to edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

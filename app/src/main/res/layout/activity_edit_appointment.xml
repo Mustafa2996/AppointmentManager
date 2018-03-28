@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/appointmentEditTitle"
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:background="@drawable/textbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type appointment title here..." />
+
+    <EditText
+        android:id="@+id/appointmentEditTime"
+        android:layout_below="@+id/appointmentEditTitle"
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:background="@drawable/textbox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type appointment time here..." />
+
+    <EditText
+        android:id="@+id/appointmentEditDetails"
+        android:layout_below="@+id/appointmentEditTime"
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:gravity="top"
+        android:background="@drawable/textbox"
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:scrollbars="vertical"
+        android:hint="Type appointment details here..." />
+
+    <Button
+        android:id="@+id/btnUpdateAppointment"
+        android:layout_alignParentBottom="true"
+        android:text="Update Appointment"
+        android:textSize="20sp"
+        android:background="#3c6eaf"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

@@ -37,6 +37,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ViewEditAppointmentActivity extends AppCompatActivity {
 
+    static final int PICK_APPOINTMENT_DATA_REQUEST = 1;  // The request code
+
     private static final String TAG = "ViewEditAppointmentActivity";
     private String mDateString;
     private TextView mEditDateAppointmentsList;
@@ -84,7 +86,11 @@ public class ViewEditAppointmentActivity extends AppCompatActivity {
                                 new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        editAppointmentFromDateList(mDateAppointments, mEditId);
+                                        Intent intent = new Intent(ViewEditAppointmentActivity.this,
+                                                EditAppointmentActivity.class);
+                                        intent.putExtra("Id", mEditId);
+                                        startActivityForResult(intent,
+                                                PICK_APPOINTMENT_DATA_REQUEST);
                                     }
                                 })
                         .setNegativeButton("No",
@@ -99,21 +105,6 @@ public class ViewEditAppointmentActivity extends AppCompatActivity {
 
 
 
-    }
-
-    private void editAppointmentFromDateList(final List<Appointment> list, final String id) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                for (Appointment appointment : list) {
-                    if (appointment.getId() == Integer.valueOf(id)) {
-                        updateAppointment(appointment);
-                    }
-                }
-                return null;
-            }
-
-        }.execute();
     }
 
     private void getDateAppointments(final String date) {
