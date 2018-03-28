@@ -9,11 +9,6 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
-        android:clickable="false"
-        android:cursorVisible="false"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:gravity="center_horizontal"
         android:hint="Enter appointment ID you want to delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />

@@ -2,6 +2,7 @@ package com.android.all.appointmentmanager;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -350,5 +351,12 @@ public class ListActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         compositeDisposable.clear();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(ListActivity.this,
+                CalendarActivity.class);
+        startActivity(intent);
     }
 }

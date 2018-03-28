@@ -49,10 +49,12 @@ import io.reactivex.schedulers.Schedulers;
 public class DeleteAppointmentActivity extends AppCompatActivity {
 
     private static final String TAG = "DeleteAppointmentActivity";
-    String mDateString;
-    TextView mDateAppointmentsList;
-    EditText mAppointmentNumberEditText;
-    Button delete;
+    private String mDateString;
+    private TextView mDateAppointmentsList;
+    private EditText mAppointmentNumberEditText;
+    private Button delete;
+    private List<Appointment> mDateAppointments;
+    private String mDeleteId;
 
     //Adapter
     List<Appointment> appointmentList = new ArrayList<>();
@@ -71,6 +73,7 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
         mAppointmentNumberEditText = (EditText) findViewById(R.id.txtAppointmentNumber);
         delete = (Button) findViewById(R.id.btnDelete);
         mDateString = getIntent().getStringExtra("Date");
+        mDateAppointments = new ArrayList<>();
 
         //Database
         AppointmentDatabase appointmentDatabase = AppointmentDatabase.getInstance(this);
@@ -86,12 +89,37 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                mDeleteId = mAppointmentNumberEditText.getText().toString();
+                new AlertDialog.Builder(DeleteAppointmentActivity.this)
+                        .setMessage("Would you like to delete event: " +
+                                mDeleteId + "?")
+                        .setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        deleteAppointmentFromDateList(mDateAppointments, mDeleteId);
+                                    }
+                                }).create().show();
             }
         });
 
 
 
+    }
+
+    private void deleteAppointmentFromDateList(final List<Appointment> list, final String id) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... params) {
+                for (Appointment appointment : list) {
+                    if (appointment.getId() == Integer.valueOf(id)) {
+                        deleteAppointment(appointment);
+                    }
+                }
+                return null;
+            }
+
+        }.execute();
     }
 
     private void createPromptDialog() {
@@ -120,6 +148,8 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
             protected List<Appointment> doInBackground(Void... params) {
                 List<Appointment> appointmentList =
                         appointmentRepository.getAppointmentsByDate(date);
+                DeleteAppointmentActivity.this.mDateAppointments.clear();
+                DeleteAppointmentActivity.this.mDateAppointments = appointmentList;
                 return appointmentList;
             }
 
