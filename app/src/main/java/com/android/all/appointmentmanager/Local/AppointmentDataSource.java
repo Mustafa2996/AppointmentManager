@@ -33,6 +33,11 @@ public class AppointmentDataSource implements IAppointmentDataSource {
     }
 
     @Override
+    public List<Appointment> getAppointmentsByDate(String appointmentDate) {
+        return appointmentDAO.getAppointmentsByDate(appointmentDate);
+    }
+
+    @Override
     public Flowable<List<Appointment>> getAllAppointments() {
         return appointmentDAO.getAllAppointments();
     }

@@ -23,6 +23,9 @@ public interface AppointmentDAO {
     @Query("SELECT * FROM appointments WHERE id=:appointmentId")
     Flowable<Appointment> getAppointmentById(int appointmentId);
 
+    @Query("SELECT * FROM appointments WHERE date=:appointmentDate")
+    List<Appointment> getAppointmentsByDate(String appointmentDate);
+
     @Query("SELECT * FROM appointments")
     Flowable<List<Appointment>> getAllAppointments();
 

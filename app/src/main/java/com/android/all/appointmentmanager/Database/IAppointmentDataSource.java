@@ -14,6 +14,8 @@ public interface IAppointmentDataSource {
 
     Flowable<Appointment> getAppointmentById(int appointmentId);
 
+    List<Appointment> getAppointmentsByDate(String appointmentDate);
+
     Flowable<List<Appointment>> getAllAppointments();
 
     void insertAppointment(Appointment... appointments);
