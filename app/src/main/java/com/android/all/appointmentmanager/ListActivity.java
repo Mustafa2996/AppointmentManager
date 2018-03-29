@@ -224,10 +224,10 @@ public class ListActivity extends AppCompatActivity {
             {
                 final EditText editTitle = new EditText(ListActivity.this);
                 editTitle.setText(appointment.getTitle());
-                editTitle.setHint("Enter your name");
+                editTitle.setHint("Enter appointment title");
                 new AlertDialog.Builder(ListActivity.this)
                         .setTitle("Edit")
-                        .setMessage("Edit appointment name")
+                        .setMessage("Edit appointment title")
                         .setView(editTitle)
                         .setPositiveButton(android.R.string.ok,
                                 new DialogInterface.OnClickListener() {
