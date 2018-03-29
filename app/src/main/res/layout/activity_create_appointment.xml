@@ -22,21 +22,71 @@
         android:layout_height="wrap_content"
         android:hint="Type appointment time here..." />
 
-    <EditText
-        android:id="@+id/appointmentDetails"
+    <LinearLayout
+        android:id="@+id/detailsLayout"
         android:layout_below="@+id/appointmentTime"
-        android:layout_margin="16dp"
-        android:padding="8dp"
-        android:gravity="top"
-        android:background="@drawable/textbox"
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:scrollbars="vertical"
-        android:hint="Type appointment details here..." />
+        android:layout_height="wrap_content">
+
+        <EditText
+            android:id="@+id/appointmentDetails"
+            android:layout_margin="16dp"
+            android:padding="8dp"
+            android:gravity="top"
+            android:background="@drawable/textbox"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="150dp"
+            android:scrollbars="vertical"
+            android:hint="Type appointment details here..." />
+
+        <TextView
+            android:id="@+id/thesaurusDetails"
+            android:layout_margin="16dp"
+            android:padding="8dp"
+            android:gravity="top"
+            android:background="@drawable/textbox"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="150dp"
+            android:scrollbars="vertical"
+            android:hint="Thesaurus synonyms here..." />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btnThesaurusLayout"
+        android:layout_below="@+id/detailsLayout"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/btnThesaurusTyping"
+            android:text="Thesaurus Typing"
+            android:textSize="20sp"
+            android:background="#3c6eaf"
+            android:layout_margin="16dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btnThesaurusHighlighting"
+            android:text="Thesaurus Highlighting"
+            android:textSize="20sp"
+            android:background="#3c6eaf"
+            android:layout_margin="16dp"
+            android:layout_width="0dp"
+            android:layout_weight="0.5"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnSaveAppointment"
-        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/btnThesaurusLayout"
         android:text="Save Appointment"
         android:textSize="20sp"
         android:background="#3c6eaf"
