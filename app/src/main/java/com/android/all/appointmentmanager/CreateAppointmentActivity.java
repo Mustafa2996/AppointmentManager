@@ -106,6 +106,23 @@ public class CreateAppointmentActivity extends AppCompatActivity {
                 findSynonyms(appointmentDetails.getText().toString());
             }
         });
+
+        btnThesaurusHighlighting = (Button) findViewById(R.id.btnThesaurusHighlighting);
+        btnThesaurusHighlighting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                findSynonyms(getSelectedText());
+            }
+        });
+    }
+
+    private String getSelectedText() {
+        int startSelection=appointmentDetails.getSelectionStart();
+        int endSelection=appointmentDetails.getSelectionEnd();
+
+        String selectedText =
+                appointmentDetails.getText().toString().substring(startSelection, endSelection);
+        return selectedText;
     }
 
     private void findSynonyms(final String word) {
