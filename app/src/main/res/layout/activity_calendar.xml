@@ -67,7 +67,7 @@
         android:layout_height="wrap_content" />
 
     <Button
-        android:id="@+id/btnSearch"
+        android:id="@+id/btnSearchAppointment"
         android:layout_below="@+id/btnMoveAppointment"
         android:text="Search"
         android:textSize="20sp"
