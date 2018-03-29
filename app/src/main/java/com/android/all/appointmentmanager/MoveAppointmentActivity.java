@@ -49,6 +49,7 @@ public class MoveAppointmentActivity extends AppCompatActivity {
     private TextView mMoveDateAppointmentsList;
     private EditText mMoveAppointmentNumberEditText;
     private Button move;
+    private Button pickDate;
     private List<Appointment> mMoveDateAppointments;
     private String mMoveId;
 
@@ -71,8 +72,10 @@ public class MoveAppointmentActivity extends AppCompatActivity {
         mMoveDateAppointmentsList = (TextView)findViewById(R.id.moveDateAppointmentsList);
         mMoveAppointmentNumberEditText = (EditText) findViewById(R.id.txtMoveAppointmentNumber);
         move = (Button) findViewById(R.id.btnMove);
+        pickDate = (Button) findViewById(R.id.btnPickDate);
         mDateString = getIntent().getStringExtra("Date");
         mMoveDateAppointments = new ArrayList<>();
+        mMoveId = "";
 
         //Database
         AppointmentDatabase appointmentDatabase = AppointmentDatabase.getInstance(this);
@@ -83,41 +86,80 @@ public class MoveAppointmentActivity extends AppCompatActivity {
 
         getDateAppointments(mDateString);
 
+        pickDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mMoveId = mMoveAppointmentNumberEditText.getText().toString();
+                if (mMoveId == null || mMoveId.matches("")) {
+                    new AlertDialog.Builder(MoveAppointmentActivity.this)
+                            .setMessage("You should input appointment ID")
+                            .setPositiveButton("Ok",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                            .setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).create().show();
+                } else {
+                    new AlertDialog.Builder(MoveAppointmentActivity.this)
+                            .setMessage("Would you like to move event: " +
+                                    mMoveId + "?")
+                            .setPositiveButton("Yes",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            showMoveDatePicker();
+                                        }
+                                    })
+                            .setNegativeButton("No",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).create().show();
+                }
 
+            }
+        });
 
         move.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mMoveId = mMoveAppointmentNumberEditText.getText().toString();
-                new AlertDialog.Builder(MoveAppointmentActivity.this)
-                        .setMessage("Would you like to move event: " +
-                                mMoveId + "?")
-                        .setPositiveButton("Yes",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        getDateStringFromDatePicker();
-                                        moveAppointmentFromDateList(mMoveId);
-                                        //deleteAppointmentFromDateList(mMoveDateAppointments, mMoveId);
-                                    }
-                                })
-                        .setNegativeButton("No",
-                                new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.dismiss();
-                                    }
-                                }).create().show();
+                if (pickedDateString == null || pickedDateString.equals("")) {
+                    new AlertDialog.Builder(MoveAppointmentActivity.this)
+                            .setMessage("You should pick the date")
+                            .setPositiveButton("Ok",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            showMoveDatePicker();
+                                        }
+                                    })
+                            .setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).create().show();
+                } else {
+                    getAppointmentById(Integer.valueOf(Integer.valueOf(mMoveId)));
+                }
             }
         });
 
     }
 
-    private void moveAppointmentFromDateList(String mMoveId) {
-
-    }
-
-    private void getDateStringFromDatePicker() {
+    private void showMoveDatePicker() {
         pickedDateString = "";
         mCurrentDate = Calendar.getInstance();
         int year = mCurrentDate.get(Calendar.YEAR);
@@ -137,19 +179,72 @@ public class MoveAppointmentActivity extends AppCompatActivity {
         mDatePicker.show();
     }
 
-    private void deleteAppointmentFromDateList(final List<Appointment> list, final String id) {
-        new AsyncTask<Void, Void, Void>() {
-            @Override
-            protected Void doInBackground(Void... params) {
-                for (Appointment appointment : list) {
-                    if (appointment.getId() == Integer.valueOf(id)) {
-                        deleteAppointment(appointment);
+    private void getAppointmentById(int id) {
+        //Use RxJava
+        Disposable disposable = appointmentRepository.getAppointmentById(id)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer<Appointment>() {
+                    @Override
+                    public void accept(Appointment appointment) throws Exception {
+                        onGetAppointmentByIdSuccess(appointment);
+                    }
+
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Toast.makeText(MoveAppointmentActivity.this,
+                                "" + throwable.getMessage(), Toast.LENGTH_SHORT)
+                                .show();
+                    }
+                });
+        compositeDisposable.add(disposable);
+    }
+
+    private void onGetAppointmentByIdSuccess(Appointment appointment) {
+        appointment.setDate(pickedDateString);
+        //createAppointment(appointment);
+        moveAppointment(appointment);
+    }
+
+    private void moveAppointment(final Appointment appointment) {
+        Disposable disposable = Observable.create(
+                new ObservableOnSubscribe<Object>() {
+
+                    @Override
+                    public void subscribe(ObservableEmitter<Object> e) throws Exception {
+                        appointmentRepository.updateAppointment(appointment);
+                        e.onComplete();
                     }
                 }
-                return null;
-            }
+        )
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(new Consumer() {
+                               @Override
+                               public void accept(Object o) throws Exception {
 
-        }.execute();
+                               }
+                           }, new Consumer<Throwable>() {
+                               @Override
+                               public void accept(Throwable throwable) throws Exception {
+                                   Toast.makeText(MoveAppointmentActivity.this,
+                                           "" + throwable.getMessage(), Toast.LENGTH_SHORT)
+                                           .show();
+                               }
+                           }, new Action() {
+                               @Override
+                               public void run() throws Exception {
+                                   /*Intent intent = new Intent(MoveAppointmentActivity.this,
+                                           ListActivity.class);
+                                   startActivity(intent);*/
+                                   getDateAppointments(pickedDateString);
+                               }
+                           }
+
+                );
+
+        compositeDisposable.add(disposable);
     }
 
     private void getDateAppointments(final String date) {
@@ -177,49 +272,6 @@ public class MoveAppointmentActivity extends AppCompatActivity {
 
         }.execute();
     }
-
-    private void deleteAppointment(final Appointment appointment) {
-        Disposable disposable = Observable.create(
-                new ObservableOnSubscribe<Object>() {
-
-                    @Override
-                    public void subscribe(ObservableEmitter<Object> e) throws Exception {
-                        appointmentRepository.deleteAppointment(appointment);
-                        e.onComplete();
-                    }
-                }
-        )
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer() {
-                               @Override
-                               public void accept(Object o) throws Exception {
-
-                               }
-                           }, new Consumer<Throwable>() {
-                               @Override
-                               public void accept(Throwable throwable) throws Exception {
-                                   Toast.makeText(MoveAppointmentActivity.this,
-                                           "" + throwable.getMessage(), Toast.LENGTH_SHORT)
-                                           .show();
-                               }
-                           }, new Action() {
-                               @Override
-                               public void run() throws Exception {
-
-                                   //loadData();//Refresh data
-                                   Intent intent = new Intent(MoveAppointmentActivity.this,
-                                           ListActivity.class);
-                                   startActivity(intent);
-                               }
-                           }
-
-                );
-
-        compositeDisposable.add(disposable);
-    }
-
-
 
     @Override
     public void onBackPressed() {

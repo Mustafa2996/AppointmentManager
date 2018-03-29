@@ -134,47 +134,6 @@ public class ViewEditAppointmentActivity extends AppCompatActivity {
         }.execute();
     }
 
-    private void updateAppointment(final Appointment appointment) {
-        Disposable disposable = Observable.create(
-                new ObservableOnSubscribe<Object>() {
-
-                    @Override
-                    public void subscribe(ObservableEmitter<Object> e) throws Exception {
-                        appointmentRepository.updateAppointment(appointment);
-                        e.onComplete();
-                    }
-                }
-        )
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(new Consumer() {
-                               @Override
-                               public void accept(Object o) throws Exception {
-
-                               }
-                           }, new Consumer<Throwable>() {
-                               @Override
-                               public void accept(Throwable throwable) throws Exception {
-                                   Toast.makeText(ViewEditAppointmentActivity.this,
-                                           "" + throwable.getMessage(), Toast.LENGTH_SHORT)
-                                           .show();
-                               }
-                           }, new Action() {
-                               @Override
-                               public void run() throws Exception {
-                                   Intent intent = new Intent(ViewEditAppointmentActivity.this,
-                                           ListActivity.class);
-                                   startActivity(intent);
-
-                                   // loadData();//Refresh data
-                               }
-                           }
-
-                );
-
-        compositeDisposable.add(disposable);
-    }
-
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(ViewEditAppointmentActivity.this,

@@ -74,6 +74,7 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
         delete = (Button) findViewById(R.id.btnDelete);
         mDateString = getIntent().getStringExtra("Date");
         mDateAppointments = new ArrayList<>();
+        mDeleteId = "";
 
         //Database
         AppointmentDatabase appointmentDatabase = AppointmentDatabase.getInstance(this);
@@ -90,6 +91,24 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mDeleteId = mAppointmentNumberEditText.getText().toString();
+                if (mDeleteId == null || mDeleteId.matches("")) {
+                    new AlertDialog.Builder(DeleteAppointmentActivity.this)
+                            .setMessage("You should input appointment ID")
+                            .setPositiveButton("Ok",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    })
+                            .setNegativeButton("Cancel",
+                                    new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.dismiss();
+                                        }
+                                    }).create().show();
+                }
                 new AlertDialog.Builder(DeleteAppointmentActivity.this)
                         .setMessage("Would you like to delete event: " +
                                 mDeleteId + "?")
@@ -220,9 +239,7 @@ public class DeleteAppointmentActivity extends AppCompatActivity {
                                public void run() throws Exception {
 
                                    //loadData();//Refresh data
-                                   Intent intent = new Intent(DeleteAppointmentActivity.this,
-                                           ListActivity.class);
-                                   startActivity(intent);
+                                   getDateAppointments(mDateString);
                                }
                            }
 

@@ -23,6 +23,16 @@
         android:layout_height="wrap_content" />
 
     <Button
+        android:id="@+id/btnPickDate"
+        android:layout_above="@+id/btnMove"
+        android:text="Pick Date"
+        android:textSize="20sp"
+        android:background="#3c6eaf"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <Button
         android:id="@+id/btnMove"
         android:layout_alignParentBottom="true"
         android:text="Move"
